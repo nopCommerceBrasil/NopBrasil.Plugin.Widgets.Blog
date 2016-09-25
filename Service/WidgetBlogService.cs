@@ -1,4 +1,7 @@
-﻿using Nop.Services.Blogs;
+﻿using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Domain.Blogs;
+using Nop.Services.Blogs;
 using Nop.Services.Seo;
 using NopBrasil.Plugin.Widgets.Blog.Models;
 
@@ -8,17 +11,25 @@ namespace NopBrasil.Plugin.Widgets.Blog.Service
     {
         private readonly IBlogService _blogService;
         private readonly BlogSettings _blogSettings;
+        private readonly ICacheManager _cacheManager;
 
-        public WidgetBlogService(IBlogService blogService, BlogSettings blogSettings)
+        public WidgetBlogService(IBlogService blogService, BlogSettings blogSettings, ICacheManager cacheManager)
         {
             this._blogService = blogService;
             this._blogSettings = blogSettings;
+            this._cacheManager = cacheManager;
+        }
+
+        private IPagedList<BlogPost> GetAllBlogPosts()
+        {
+            string cacheKey = $"nopBrasil:blogPosts:qtd:{_blogSettings.QtdBlogPosts}";
+            return _cacheManager.Get<IPagedList<BlogPost>>(cacheKey, () => _blogService.GetAllBlogPosts(pageIndex: 0, pageSize: _blogSettings.QtdBlogPosts));
         }
 
         public PublicInfoModel GetModel()
         {
             PublicInfoModel model = new PublicInfoModel();
-            foreach (var post in _blogService.GetAllBlogPosts(pageIndex: 0, pageSize: _blogSettings.QtdBlogPosts))
+            foreach (var post in GetAllBlogPosts())
             {
                 string SeName = post.GetSeName(post.LanguageId, ensureTwoPublishedLanguages: false);
                 model.BlogItems.Add(new BlogItemModel()

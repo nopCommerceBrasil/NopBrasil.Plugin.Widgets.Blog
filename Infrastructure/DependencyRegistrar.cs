@@ -1,4 +1,6 @@
 using Autofac;
+using Autofac.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -13,7 +15,7 @@ namespace NopBrasil.Plugin.Widgets.Blog.Infrastructure
         {
             //we cache presentation models between requests
             builder.RegisterType<WidgetsBlogController>().AsSelf();
-            builder.RegisterType<WidgetBlogService>().As<IWidgetBlogService>();
+            builder.RegisterType<WidgetBlogService>().As<IWidgetBlogService>().WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static")).InstancePerDependency();
         }
 
         public int Order
