@@ -1,7 +1,6 @@
 ﻿using NopBrasil.Plugin.Widgets.Blog.Models;
 using Nop.Services.Configuration;
 using Nop.Web.Framework.Controllers;
-using NopBrasil.Plugin.Widgets.Blog.Service;
 using Nop.Web.Framework;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
@@ -14,15 +13,13 @@ namespace NopBrasil.Plugin.Widgets.Blog.Controllers
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
         private readonly BlogSettings _BlogSettings;
-        private readonly IWidgetBlogService _widgetBlogService;
 
         public WidgetsBlogController(ISettingService settingService, ILocalizationService localizationService,
-            BlogSettings BlogSettings, IWidgetBlogService widgetBlogService)
+            BlogSettings BlogSettings)
         {
             this._settingService = settingService;
             this._localizationService = localizationService;
             this._BlogSettings = BlogSettings;
-            this._widgetBlogService = widgetBlogService;
         }
 
         public ActionResult Configure()
@@ -39,9 +36,8 @@ namespace NopBrasil.Plugin.Widgets.Blog.Controllers
         public ActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
+
             _BlogSettings.QtdBlogPosts = model.QtdBlogPosts;
             _BlogSettings.WidgetZone = model.WidgetZone;
             _settingService.SaveSetting(_BlogSettings);
