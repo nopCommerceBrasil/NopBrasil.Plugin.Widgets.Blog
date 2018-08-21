@@ -1,4 +1,4 @@
-﻿using Nop.Web.Framework.Mvc;
+﻿using Nop.Web.Framework.Mvc.Models;
 using System;
 using System.Collections.Generic;
 
@@ -13,9 +13,6 @@ namespace NopBrasil.Plugin.Widgets.Blog.Models
 
         public IList<BlogItemModel> BlogItems { get; set; }
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
+        public object Clone() => this.MemberwiseClone();
     }
 }

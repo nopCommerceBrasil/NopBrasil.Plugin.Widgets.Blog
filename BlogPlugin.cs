@@ -1,51 +1,30 @@
 using System.Collections.Generic;
-using System.Web.Routing;
+using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Media;
 
 namespace NopBrasil.Plugin.Widgets.Blog
 {
-    /// <summary>
-    /// PLugin
-    /// </summary>
     public class BlogPlugin : BasePlugin, IWidgetPlugin
     {
         private readonly ISettingService _settingService;
         private readonly BlogSettings _blogSettings;
+        private readonly IWebHelper _webHelper;
 
-        public BlogPlugin(IPictureService pictureService,
-            ISettingService settingService, BlogSettings BlogSettings)
+        public BlogPlugin(ISettingService settingService, BlogSettings BlogSettings, IWebHelper webHelper)
         {
             this._settingService = settingService;
             this._blogSettings = BlogSettings;
+            this._webHelper = webHelper;
         }
 
-        public IList<string> GetWidgetZones()
-        {
-            return new List<string> { _blogSettings.WidgetZone };
-        }
+        public IList<string> GetWidgetZones() => new List<string> { _blogSettings.WidgetZone };
 
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "Configure";
-            controllerName = "WidgetsBlog";
-            routeValues = new RouteValueDictionary { { "Namespaces", "NopBrasil.Plugin.Widgets.Blog.Controllers" }, { "area", null } };
-        }
+        public override string GetConfigurationPageUrl() => _webHelper.GetStoreLocation() + "Admin/WidgetsBlog/Configure";
 
-        public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "PublicInfo";
-            controllerName = "WidgetsBlog";
-            routeValues = new RouteValueDictionary
-            {
-                {"Namespaces", "NopBrasil.Plugin.Widgets.Blog.Controllers"},
-                {"area", null},
-                {"widgetZone", widgetZone}
-            };
-        }
+        public void GetPublicViewComponent(string widgetZone, out string viewComponentName) => viewComponentName = "WidgetsBlog";
 
         public override void Install()
         {
@@ -66,10 +45,8 @@ namespace NopBrasil.Plugin.Widgets.Blog
 
         public override void Uninstall()
         {
-            //settings
             _settingService.DeleteSetting<BlogSettings>();
 
-            //locales
             this.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone");
             this.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts");

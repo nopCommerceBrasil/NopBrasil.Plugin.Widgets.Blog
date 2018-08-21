@@ -31,14 +31,13 @@ namespace NopBrasil.Plugin.Widgets.Blog.Service
             PublicInfoModel model = new PublicInfoModel();
             foreach (var post in GetAllBlogPosts())
             {
-                string SeName = post.GetSeName(post.LanguageId, ensureTwoPublishedLanguages: false);
                 model.BlogItems.Add(new BlogItemModel()
                 {
                     CreatedOn = post.CreatedOnUtc,
                     Title = post.Title,
                     Short = post.BodyOverview,
                     Full = post.Body,
-                    SeName = SeName,
+                    SeName = post.GetSeName(post.LanguageId, ensureTwoPublishedLanguages: false),
                     Id = post.Id
                 });
             }

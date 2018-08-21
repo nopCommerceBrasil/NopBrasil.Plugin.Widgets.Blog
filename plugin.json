@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Blog",
+  "SystemName": "Widgets.Blog",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "nopCommerce Brasil - www.nopcommercebrasil.com - nopcommercebrasil@nopcommercebrasil.com",
+  "DisplayOrder": 1,
+  "FileName": "NopBrasil.Plugin.Widgets.Blog.dll",
+  "Description": "Plugin for nopCommerce to show the last blog posts in a widget zone"
+}

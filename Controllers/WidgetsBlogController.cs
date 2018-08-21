@@ -1,28 +1,30 @@
-﻿using System.Web.Mvc;
-using NopBrasil.Plugin.Widgets.Blog.Models;
+﻿using NopBrasil.Plugin.Widgets.Blog.Models;
 using Nop.Services.Configuration;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Controllers;
 using NopBrasil.Plugin.Widgets.Blog.Service;
+using Nop.Web.Framework;
+using Microsoft.AspNetCore.Mvc;
+using Nop.Services.Localization;
 
 namespace NopBrasil.Plugin.Widgets.Blog.Controllers
 {
-    public class WidgetsBlogController : BasePublicController
+    [Area(AreaNames.Admin)]
+    public class WidgetsBlogController : BasePluginController
     {
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
         private readonly BlogSettings _BlogSettings;
         private readonly IWidgetBlogService _widgetBlogService;
 
-        public WidgetsBlogController(ISettingService settingService,
+        public WidgetsBlogController(ISettingService settingService, ILocalizationService localizationService,
             BlogSettings BlogSettings, IWidgetBlogService widgetBlogService)
         {
             this._settingService = settingService;
+            this._localizationService = localizationService;
             this._BlogSettings = BlogSettings;
             this._widgetBlogService = widgetBlogService;
         }
 
-        [AdminAuthorize]
-        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new ConfigurationModel()
@@ -30,12 +32,10 @@ namespace NopBrasil.Plugin.Widgets.Blog.Controllers
                 WidgetZone = _BlogSettings.WidgetZone,
                 QtdBlogPosts = _BlogSettings.QtdBlogPosts
             };
-            return View("~/Plugins/Widgets.Blog/Views/WidgetsBlog/Configure.cshtml", model);
+            return View("~/Plugins/Widgets.Blog/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
         public ActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -45,13 +45,8 @@ namespace NopBrasil.Plugin.Widgets.Blog.Controllers
             _BlogSettings.QtdBlogPosts = model.QtdBlogPosts;
             _BlogSettings.WidgetZone = model.WidgetZone;
             _settingService.SaveSetting(_BlogSettings);
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
             return Configure();
-        }
-
-        [ChildActionOnly]
-        public ActionResult PublicInfo(string widgetZone, object additionalData = null)
-        {
-             return View("~/Plugins/Widgets.Blog/Views/WidgetsBlog/PublicInfo.cshtml", _widgetBlogService.GetModel());
         }
     }
 }
