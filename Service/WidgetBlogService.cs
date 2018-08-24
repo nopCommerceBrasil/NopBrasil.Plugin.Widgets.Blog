@@ -13,7 +13,7 @@ namespace NopBrasil.Plugin.Widgets.Blog.Service
         private readonly BlogSettings _blogSettings;
         private readonly ICacheManager _cacheManager;
 
-        public WidgetBlogService(IBlogService blogService, BlogSettings blogSettings, ICacheManager cacheManager)
+        public WidgetBlogService(IBlogService blogService, BlogSettings blogSettings, IStaticCacheManager cacheManager)
         {
             this._blogService = blogService;
             this._blogSettings = blogSettings;

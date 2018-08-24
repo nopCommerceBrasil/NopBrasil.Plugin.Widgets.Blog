@@ -1,6 +1,4 @@
 using Autofac;
-using Autofac.Core;
-using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -12,7 +10,7 @@ namespace NopBrasil.Plugin.Widgets.Blog.Infrastructure
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig nopConfig)
         {
-            builder.RegisterType<WidgetBlogService>().As<IWidgetBlogService>().WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static")).InstancePerDependency();
+            builder.RegisterType<WidgetBlogService>().As<IWidgetBlogService>().InstancePerDependency();
         }
 
         public int Order => 2;
