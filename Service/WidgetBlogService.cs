@@ -12,12 +12,14 @@ namespace NopBrasil.Plugin.Widgets.Blog.Service
         private readonly IBlogService _blogService;
         private readonly BlogSettings _blogSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly IUrlRecordService _urlRecordService;
 
-        public WidgetBlogService(IBlogService blogService, BlogSettings blogSettings, IStaticCacheManager cacheManager)
+        public WidgetBlogService(IBlogService blogService, BlogSettings blogSettings, IStaticCacheManager cacheManager, IUrlRecordService urlRecordService)
         {
             this._blogService = blogService;
             this._blogSettings = blogSettings;
             this._cacheManager = cacheManager;
+            this._urlRecordService = urlRecordService;
         }
 
         private IPagedList<BlogPost> GetAllBlogPosts()
@@ -37,7 +39,7 @@ namespace NopBrasil.Plugin.Widgets.Blog.Service
                     Title = post.Title,
                     Short = post.BodyOverview,
                     Full = post.Body,
-                    SeName = post.GetSeName(post.LanguageId, ensureTwoPublishedLanguages: false),
+                    SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false),
                     Id = post.Id
                 });
             }

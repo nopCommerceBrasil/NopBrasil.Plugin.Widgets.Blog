@@ -12,19 +12,19 @@ namespace NopBrasil.Plugin.Widgets.Blog
         private readonly ISettingService _settingService;
         private readonly BlogSettings _blogSettings;
         private readonly IWebHelper _webHelper;
+        private readonly ILocalizationService _localizationService;
 
-        public BlogPlugin(ISettingService settingService, BlogSettings BlogSettings, IWebHelper webHelper)
+        public BlogPlugin(ISettingService settingService, BlogSettings BlogSettings, IWebHelper webHelper, ILocalizationService localizationService)
         {
             this._settingService = settingService;
             this._blogSettings = BlogSettings;
             this._webHelper = webHelper;
+            this._localizationService = localizationService;
         }
 
         public IList<string> GetWidgetZones() => new List<string> { _blogSettings.WidgetZone };
 
         public override string GetConfigurationPageUrl() => _webHelper.GetStoreLocation() + "Admin/WidgetsBlog/Configure";
-
-        public void GetPublicViewComponent(string widgetZone, out string viewComponentName) => viewComponentName = "WidgetsBlog";
 
         public override void Install()
         {
@@ -35,10 +35,10 @@ namespace NopBrasil.Plugin.Widgets.Blog
             };
             _settingService.SaveSetting(settings);
 
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone", "WidgetZone name");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone.Hint", "Enter the WidgetZone name that will display the HTML code.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts", "Number of blog posts");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts.Hint", "Enter the number of blog posts that will be displayed in view.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone", "WidgetZone name");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone.Hint", "Enter the WidgetZone name that will display the HTML code.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts", "Number of blog posts");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts.Hint", "Enter the number of blog posts that will be displayed in view.");
 
             base.Install();
         }
@@ -47,12 +47,14 @@ namespace NopBrasil.Plugin.Widgets.Blog
         {
             _settingService.DeleteSetting<BlogSettings>();
 
-            this.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone");
-            this.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone.Hint");
-            this.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts");
-            this.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.WidgetZone.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts");
+            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.Blog.Fields.QtdBlogPosts.Hint");
 
             base.Uninstall();
         }
+
+        public string GetWidgetViewComponentName(string widgetZone) => "WidgetsBlog";
     }
 }

@@ -1,4 +1,4 @@
-﻿using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 using System;
 
 namespace NopBrasil.Plugin.Widgets.Blog.Models
